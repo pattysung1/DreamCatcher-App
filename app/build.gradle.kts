@@ -33,8 +33,12 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
-    buildFeatures {
+    buildFeatures { // BNRG Listing 9.1
         viewBinding = true
+    }
+    @Suppress("UnstableApiUsage") // for Project 2 testing
+    testOptions {
+        animationsDisabled = true
     }
 }
 
@@ -44,6 +48,13 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.9.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+
+    implementation("androidx.fragment:fragment-ktx:1.6.1") // BNRG Listing 9.1
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1") // BNRG Listing 10.1
+    implementation("androidx.recyclerview:recyclerview:1.3.0") // BNRG Listing 10.5
+    implementation("androidx.test.espresso:espresso-contrib:3.5.1") // for Project 2 testing
+    debugImplementation("androidx.fragment:fragment-testing:1.6.1") // for Project 2 testing
+
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
