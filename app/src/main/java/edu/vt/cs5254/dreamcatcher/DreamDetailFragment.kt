@@ -82,18 +82,18 @@ class DreamDetailFragment: Fragment() {
         text = entry.kind.toString()
         when(entry.kind){
             DreamEntryKind.REFLECTION -> {
-                setBackgroundWithContrastingText("teal")
+                setBackgroundWithContrastingText("#FFC988")
                 isAllCaps = false
                 text = entry.text
             }
             DreamEntryKind.CONCEIVED -> {
-                setBackgroundWithContrastingText("green")
+                setBackgroundWithContrastingText("navy")
             }
             DreamEntryKind.DEFERRED -> {
-                setBackgroundWithContrastingText("lightgrey")
+                setBackgroundWithContrastingText("#FA8978")
             }
             DreamEntryKind.FULFILLED -> {
-                setBackgroundWithContrastingText("blue")
+                setBackgroundWithContrastingText("#86E3CE")
             }
         }
     }
