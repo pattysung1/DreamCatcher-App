@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">DreamCatcher</string>
+    <string name="dream_label">Dream</string>
+    <string name="entries_label">Entries</string>
+    <string name="fulfilled">Fulfilled</string>
+    <string name="deferred">Deferred</string>
 </resources>
