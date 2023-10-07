@@ -7,13 +7,25 @@
     android:layout_marginBottom="8dp"
     android:gravity="center_vertical">
 
-    <TextView
-        android:id="@+id/list_item_title"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        tools:text="Dream title" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/list_item_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            tools:text="Dream title" />
+
+        <TextView
+            android:id="@+id/list_item_reflecition_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Reflection: #" />
+    </LinearLayout>
 
     <Space
         android:layout_width="16dp"

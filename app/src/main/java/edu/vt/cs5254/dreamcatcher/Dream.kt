@@ -1,5 +1,6 @@
 package edu.vt.cs5254.dreamcatcher
 
+import android.text.format.DateFormat
 import java.util.Date
 import java.util.UUID
 

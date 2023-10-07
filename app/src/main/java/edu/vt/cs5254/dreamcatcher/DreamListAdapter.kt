@@ -10,6 +10,11 @@ class DreamHolder(private val binding: ListItemDreamBinding):
     RecyclerView.ViewHolder(binding.root){
     fun bind(dream : Dream){ //really just updateView!!!
         binding.listItemTitle.text = dream.title
+        binding.listItemReflecitionCount.text =
+            binding.root.context.getString(
+                R.string.reflection_count,
+                dream.entries.count{ it.kind == DreamEntryKind.REFLECTION}
+            )
 
         with(binding.listItemImage){
             when{

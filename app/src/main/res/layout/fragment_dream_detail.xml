@@ -20,7 +20,7 @@
             android:textSize="24sp" />
 
         <EditText
-            android:id="@+id/editTextText2"
+            android:id="@+id/title_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -31,10 +31,10 @@
             android:importantForAutofill="no" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/last_updated_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TextView" />
+            android:text="@string/last_updated_text" />
 
         <CheckBox
             android:id="@+id/fulfilled_checkbox"

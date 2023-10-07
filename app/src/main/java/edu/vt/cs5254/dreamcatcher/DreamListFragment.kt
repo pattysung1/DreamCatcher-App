@@ -28,8 +28,8 @@ class DreamListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.dreamRecycleView.layoutManager = LinearLayoutManager(context)
-        binding.dreamRecycleView.adapter = DreamListAdapter(vm.dreams)
+        binding.dreamRecyclerView.layoutManager = LinearLayoutManager(context)
+        binding.dreamRecyclerView.adapter = DreamListAdapter(vm.dreams)
     }
 
     override fun onDestroyView() {
