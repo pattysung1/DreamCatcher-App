@@ -12,6 +12,9 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // PID: 906646746
+        // Name: Pei-Hsuan Sung
+
 
 
     }

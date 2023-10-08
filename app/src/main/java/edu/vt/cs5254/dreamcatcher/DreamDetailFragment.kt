@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import edu.vt.cs5254.dreamcatcher.databinding.FragmentDreamDetailBinding
 
 class DreamDetailFragment: Fragment() {
     private var _binding: FragmentDreamDetailBinding?= null
+
     private val binding
         get() = checkNotNull(_binding){
             "FragmentDreamDetailBinding is null!!!"
@@ -27,9 +29,15 @@ class DreamDetailFragment: Fragment() {
         return binding.root
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.titleText.doOnTextChanged{text, _, _, _ ->
+            vm.dream = vm.dream.copy(title = text.toString())
+                .apply { entries = vm.dream.entries }
+            updateView()
+        }
         binding.deferredCheckbox.setOnClickListener {
             if (vm.dream.isDeferred){
                 vm.dream.entries = vm.dream.entries.filter { it.kind != DreamEntryKind.DEFERRED }
@@ -56,6 +64,12 @@ class DreamDetailFragment: Fragment() {
         _binding = null
     }
     private fun updateView(){
+
+        binding.lastUpdatedText.text = String.format(vm.lastUpdateDateTime)
+        if (binding.titleText.text.toString() != vm.dream.title) {
+            binding.titleText.setText(vm.dream.title)
+        }
+
         val buttonList = listOf(
             binding.entry0Button,
             binding.entry1Button,
