@@ -14,8 +14,5 @@ class MainActivity : AppCompatActivity() {
 
         // PID: 906646746
         // Name: Pei-Hsuan Sung
-
-
-
     }
 }

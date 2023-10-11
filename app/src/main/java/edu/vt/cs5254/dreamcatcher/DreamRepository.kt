@@ -16,13 +16,13 @@ class DreamRepository(context: Context) {
         .createFromAsset()
         .build()
 
-    suspend fun getDreams(): List<Dream>{
-
-    }
-
-    suspend fun getDream(id: UUID){
-
-    }
+//    suspend fun getDreams(): List<Dream>{
+//
+//    }
+//
+//    suspend fun getDream(id: UUID){
+//
+//    }
     companion object{
         private var INSTANCE: DreamRepository? =null
 
