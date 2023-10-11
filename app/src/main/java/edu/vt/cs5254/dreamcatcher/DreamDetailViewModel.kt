@@ -7,7 +7,7 @@ import java.util.Date
 class DreamDetailViewModel : ViewModel() {
 
     var dream: Dream
-    lateinit var lastUpdateDateTime : String
+    var lastUpdateDateTime : String
 
     init {
         dream = Dream(title = "My First Dream")

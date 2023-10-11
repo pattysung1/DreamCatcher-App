@@ -1,15 +1,15 @@
 package edu.vt.cs5254.dreamcatcher.database
 
-import androidx.room.TypeConverters
+import androidx.room.TypeConverter
 import java.util.Date
 
 class DreamTypeConverters {
-    @TypeConverters
+    @TypeConverter
     fun getDateFromLong(millis: Long): Date{
         return Date(millis)
     }
 
-    @TypeConverters
+    @TypeConverter
     fun getLongFromDate(date: Date): Long{
         return date.time
     }

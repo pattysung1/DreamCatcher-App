@@ -13,20 +13,26 @@ class DreamRepository(context: Context) {
         DreamDatabase::class.java,
         DATABASE_NAME
     )
-        .createFromAsset()
+        .createFromAsset(DATABASE_NAME)
         .build()
 
-//    suspend fun getDreams(): List<Dream>{
-//
-//    }
-//
-//    suspend fun getDream(id: UUID){
-//
-//    }
+    // Chapter 12: DreamListFragment
+    suspend fun getDreams(): List<Dream>{
+        val dreamMap = database.dreamDao().getDream() //returns Map<Dream, List<DreamEntry>>
+        return dreamMap.keys.map{ dream ->
+            dream.apply { entries = dreamMap.getValue(dream) }
+        }
+    }
+
+    // Chapter 13: DreamDetailFragment
+    suspend fun getDream(id: UUID): Dream{
+        return database.dreamDao().getDreamAndEntries(id)
+    }
+
     companion object{
         private var INSTANCE: DreamRepository? =null
 
-        fun initalize(context: Context){
+        fun initialize(context: Context){
             check(INSTANCE ==null) {"Cannot initialize DreamRepository more than once!"}
             INSTANCE = DreamRepository(context)
         }
