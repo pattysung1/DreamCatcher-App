@@ -3,6 +3,8 @@ package edu.vt.cs5254.dreamcatcher
 import android.content.Context
 import androidx.room.Room
 import edu.vt.cs5254.dreamcatcher.database.DreamDatabase
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.util.UUID
 
 
@@ -17,11 +19,14 @@ class DreamRepository(context: Context) {
         .build()
 
     // Chapter 12: DreamListFragment
-    suspend fun getDreams(): List<Dream>{
-        val dreamMap = database.dreamDao().getDream() //returns Map<Dream, List<DreamEntry>>
-        return dreamMap.keys.map{ dream ->
-            dream.apply { entries = dreamMap.getValue(dream) }
+    fun getDreams(): Flow<List<Dream>> {
+        val dreamMultiMapFlow = database.dreamDao().getDream() //returns Flow<Map<Dream, List<DreamEntry>>>
+        return dreamMultiMapFlow.map {dreamMap ->
+            dreamMap.keys.map{ dream ->
+                dream.apply { entries = dreamMap.getValue(dream) }
+            }
         }
+
     }
 
     // Chapter 13: DreamDetailFragment

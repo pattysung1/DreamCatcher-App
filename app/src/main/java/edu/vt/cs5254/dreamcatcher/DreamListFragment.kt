@@ -6,9 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import edu.vt.cs5254.dreamcatcher.databinding.FragmentDreamDetailBinding
 import edu.vt.cs5254.dreamcatcher.databinding.FragmentDreamListBinding
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class DreamListFragment : Fragment() {
 
@@ -29,7 +34,15 @@ class DreamListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.dreamRecyclerView.layoutManager = LinearLayoutManager(context)
-        binding.dreamRecyclerView.adapter = DreamListAdapter(vm.dreams)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                vm.dreams.collect {dreams ->
+                    binding.dreamRecyclerView.adapter = DreamListAdapter(dreams)
+                }
+
+            }
+        }
+
     }
 
     override fun onDestroyView() {

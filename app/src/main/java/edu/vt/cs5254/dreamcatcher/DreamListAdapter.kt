@@ -9,6 +9,9 @@ import edu.vt.cs5254.dreamcatcher.databinding.ListItemDreamBinding
 class DreamHolder(private val binding: ListItemDreamBinding):
     RecyclerView.ViewHolder(binding.root){
     fun bind(dream : Dream){ //really just updateView!!!
+
+
+
         binding.listItemTitle.text = dream.title
         binding.listItemReflecitionCount.text =
             binding.root.context.getString(
