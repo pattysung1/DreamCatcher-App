@@ -1,6 +1,7 @@
 package edu.vt.cs5254.dreamcatcher
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,6 +9,7 @@ import android.widget.Button
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import edu.vt.cs5254.dreamcatcher.databinding.FragmentDreamDetailBinding
 
 class DreamDetailFragment: Fragment() {
@@ -17,6 +19,8 @@ class DreamDetailFragment: Fragment() {
         get() = checkNotNull(_binding){
             "FragmentDreamDetailBinding is null!!!"
         }
+
+    private val args: DreamDetailFragmentArgs by navArgs()
 
     private val vm: DreamDetailViewModel by viewModels()
     override fun onCreateView(
@@ -32,6 +36,8 @@ class DreamDetailFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        Log.w("---DDF---", "Received arg ${args.dreamId}")
 
         binding.titleText.doOnTextChanged{text, _, _, _ ->
             vm.dream = vm.dream.copy(title = text.toString())

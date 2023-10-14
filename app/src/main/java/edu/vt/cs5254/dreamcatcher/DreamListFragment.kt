@@ -1,6 +1,7 @@
 package edu.vt.cs5254.dreamcatcher
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import edu.vt.cs5254.dreamcatcher.databinding.FragmentDreamDetailBinding
 import edu.vt.cs5254.dreamcatcher.databinding.FragmentDreamListBinding
@@ -37,7 +39,10 @@ class DreamListFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
                 vm.dreams.collect {dreams ->
-                    binding.dreamRecyclerView.adapter = DreamListAdapter(dreams)
+                    binding.dreamRecyclerView.adapter = DreamListAdapter(dreams) {dreamId->
+                        Log.w("---DLF---", "Clicked dream ID: $dreamId")
+                        findNavController().navigate(DreamListFragmentDirections.showDreamDetail(dreamId))
+                    }
                 }
 
             }

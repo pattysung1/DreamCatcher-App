@@ -5,12 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import edu.vt.cs5254.dreamcatcher.databinding.ListItemDreamBinding
+import java.util.UUID
 
 class DreamHolder(private val binding: ListItemDreamBinding):
     RecyclerView.ViewHolder(binding.root){
-    fun bind(dream : Dream){ //really just updateView!!!
+    fun bind(dream : Dream, onDreamClicked: (UUID) -> Unit){ //really just updateView!!!
 
-
+        binding.root.setOnClickListener{
+            onDreamClicked(dream.id)
+        }
 
         binding.listItemTitle.text = dream.title
         binding.listItemReflecitionCount.text =
@@ -36,7 +39,11 @@ class DreamHolder(private val binding: ListItemDreamBinding):
         }
     }
 }
-class DreamListAdapter(private val dreams: List<Dream>) : RecyclerView.Adapter<DreamHolder>() {
+class DreamListAdapter(
+    private val dreams: List<Dream>,
+    private val onDreamClicked: (UUID) -> Unit
+
+) : RecyclerView.Adapter<DreamHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DreamHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = ListItemDreamBinding.inflate(inflater, parent, false)
@@ -48,6 +55,6 @@ class DreamListAdapter(private val dreams: List<Dream>) : RecyclerView.Adapter<D
     }
 
     override fun onBindViewHolder(holder: DreamHolder, position: Int) {
-        holder.bind(dreams[position])
+        holder.bind(dreams[position], onDreamClicked)
     }
 }
