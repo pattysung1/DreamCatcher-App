@@ -34,7 +34,8 @@
             android:id="@+id/last_updated_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/last_updated_text" />
+            android:text="@string/last_updated_text"
+            android:textAlignment="center" />
 
         <LinearLayout
             android:layout_width="match_parent"

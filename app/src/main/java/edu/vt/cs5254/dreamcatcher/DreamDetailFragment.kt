@@ -9,8 +9,13 @@ import android.widget.Button
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import edu.vt.cs5254.dreamcatcher.databinding.FragmentDreamDetailBinding
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 
 class DreamDetailFragment: Fragment() {
     private var _binding: FragmentDreamDetailBinding?= null
@@ -22,7 +27,9 @@ class DreamDetailFragment: Fragment() {
 
     private val args: DreamDetailFragmentArgs by navArgs()
 
-    private val vm: DreamDetailViewModel by viewModels()
+    private val vm: DreamDetailViewModel by viewModels(){
+        DreamDetailViewModelFactory(args.dreamId)
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -38,42 +45,57 @@ class DreamDetailFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         Log.w("---DDF---", "Received arg ${args.dreamId}")
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
+                vm.dream.collect{ dream->
+                    dream?.let {updateView(it)}
+                }
+            }
+        }
 
         binding.titleText.doOnTextChanged{text, _, _, _ ->
-            vm.dream = vm.dream.copy(title = text.toString())
-                .apply { entries = vm.dream.entries }
-            updateView()
+            vm.updateDream { oldDream ->
+                oldDream.copy(title = text.toString())
+                    .apply { entries = oldDream.entries }
+            }
         }
         binding.deferredCheckbox.setOnClickListener {
-            if (vm.dream.isDeferred){
-                vm.dream.entries = vm.dream.entries.filter { it.kind != DreamEntryKind.DEFERRED }
-            } else{
-                vm.dream.entries += DreamEntry(kind = DreamEntryKind.DEFERRED, dreamId = vm.dream.id)
+            vm.updateDream { oldDream ->
+                oldDream.copy()
+                    .apply { entries =
+                        if (oldDream.isDeferred){
+                            oldDream.entries.filter { it.kind != DreamEntryKind.DEFERRED }
+                        } else{
+                            oldDream.entries + DreamEntry(kind = DreamEntryKind.DEFERRED, dreamId = id)
+                        }
+                    }
             }
-            updateView()
         }
         binding.fulfilledCheckbox.setOnClickListener {
-            if (vm.dream.isFulfilled){
-                vm.dream.entries = vm.dream.entries.filter { it.kind != DreamEntryKind.FULFILLED }
-            } else{
-                vm.dream.entries += DreamEntry(kind = DreamEntryKind.FULFILLED, dreamId = vm.dream.id)
+            vm.updateDream{ oldDream ->
+                oldDream.copy()
+                    .apply {
+                        if (oldDream.isFulfilled){
+                            oldDream.entries.filter { it.kind != DreamEntryKind.FULFILLED }
+                        } else{
+                            oldDream.entries + DreamEntry(kind = DreamEntryKind.FULFILLED, dreamId = id)
+                        }
+                    }
             }
-            updateView()
-        }
-        //set click listeners (call updateView within each)
 
-        updateView()
+
+        }
     }
     override fun onDestroyView() {
         super.onDestroyView()
 
         _binding = null
     }
-    private fun updateView(){
+    private fun updateView(dream: Dream){
 
         binding.lastUpdatedText.text = String.format(vm.lastUpdateDateTime)
-        if (binding.titleText.text.toString() != vm.dream.title) {
-            binding.titleText.setText(vm.dream.title)
+        if (binding.titleText.text.toString() != dream.title) {
+            binding.titleText.setText(dream.title)
         }
 
         val buttonList = listOf(
@@ -85,16 +107,16 @@ class DreamDetailFragment: Fragment() {
         )
         buttonList.forEach{ it.visibility = View.GONE }
 
-        buttonList.zip(vm.dream.entries)
+        buttonList.zip(dream.entries)
             .forEach { (btn, entry) ->
                 btn.configureForEntry(entry)
             }
 
-        binding.deferredCheckbox.isChecked = vm.dream.isDeferred
-        binding.fulfilledCheckbox.isChecked = vm.dream.isFulfilled
+        binding.deferredCheckbox.isChecked = dream.isDeferred
+        binding.fulfilledCheckbox.isChecked = dream.isFulfilled
 
-        binding.deferredCheckbox.isEnabled = !vm.dream.isFulfilled
-        binding.fulfilledCheckbox.isEnabled = !vm.dream.isDeferred
+        binding.deferredCheckbox.isEnabled = !dream.isFulfilled
+        binding.fulfilledCheckbox.isEnabled = !dream.isDeferred
     }
 
     private fun Button.configureForEntry(entry: DreamEntry){
