@@ -36,7 +36,7 @@ class DreamDetailFragmentTest {
 
     @Test
     fun initialTitleAndButtons() {
-        onView(withId(R.id.title_text))
+        onView(withId(R.id.dream_title))
             .check(matches(withText("My First Dream")))
         onView(withId(R.id.entry_0_button))
             .check(matches(withText("CONCEIVED")))
@@ -125,7 +125,7 @@ class DreamDetailFragmentTest {
             assertEquals("My First Dream", ddfVM.dream.title)
         }
 
-        onView(withId(R.id.title_text))
+        onView(withId(R.id.dream_title))
             .perform(replaceText("Different Dream"))
 
         scenario.withFragment {
@@ -184,7 +184,7 @@ class DreamDetailFragmentTest {
             .perform(click())
         onView(withId(R.id.fulfilled_checkbox))
             .perform(click())
-        onView(withId(R.id.title_text))
+        onView(withId(R.id.dream_title))
             .perform(replaceText("Another Dream"))
 
         scenario.recreate()
@@ -195,7 +195,7 @@ class DreamDetailFragmentTest {
         onView(withId(R.id.fulfilled_checkbox))
             .check(matches(isChecked()))
             .check(matches(isEnabled()))
-        onView(withId(R.id.title_text))
+        onView(withId(R.id.dream_title))
             .check(matches(withText("Another Dream")))
         onView(withId(R.id.entry_3_button))
             .check(matches(withText("FULFILLED")))
@@ -233,7 +233,7 @@ class DreamDetailFragmentTest {
 
         localScenario.moveToState(Lifecycle.State.RESUMED)
 
-        onView(withId(R.id.title_text))
+        onView(withId(R.id.dream_title))
             .check(matches(withText("A Very Big Dream")))
         onView(withId(R.id.entry_0_button))
             .check(matches(withText("CONCEIVED")))

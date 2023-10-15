@@ -6,4 +6,5 @@
     <string name="deferred">Deferred</string>
     <string name="last_updated_text">Last_updated_text</string>
     <string name="reflection_count">Reflections: %1$d</string>
+    <string name="last_updated">Last Updated %1$s</string>
 </resources>

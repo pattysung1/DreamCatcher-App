@@ -15,7 +15,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.navArgs
 import edu.vt.cs5254.dreamcatcher.databinding.FragmentDreamDetailBinding
 import kotlinx.coroutines.flow.collect
+import android.text.format.DateFormat
 import kotlinx.coroutines.launch
+//import java.text.DateFormat
 
 class DreamDetailFragment: Fragment() {
     private var _binding: FragmentDreamDetailBinding?= null
@@ -53,7 +55,7 @@ class DreamDetailFragment: Fragment() {
             }
         }
 
-        binding.titleText.doOnTextChanged{text, _, _, _ ->
+        binding.dreamTitle.doOnTextChanged{text, _, _, _ ->
             vm.updateDream { oldDream ->
                 oldDream.copy(title = text.toString())
                     .apply { entries = oldDream.entries }
@@ -71,10 +73,11 @@ class DreamDetailFragment: Fragment() {
                     }
             }
         }
+
         binding.fulfilledCheckbox.setOnClickListener {
             vm.updateDream{ oldDream ->
                 oldDream.copy()
-                    .apply {
+                    .apply {entries =
                         if (oldDream.isFulfilled){
                             oldDream.entries.filter { it.kind != DreamEntryKind.FULFILLED }
                         } else{
@@ -82,8 +85,6 @@ class DreamDetailFragment: Fragment() {
                         }
                     }
             }
-
-
         }
     }
     override fun onDestroyView() {
@@ -92,12 +93,6 @@ class DreamDetailFragment: Fragment() {
         _binding = null
     }
     private fun updateView(dream: Dream){
-
-        binding.lastUpdatedText.text = String.format(vm.lastUpdateDateTime)
-        if (binding.titleText.text.toString() != dream.title) {
-            binding.titleText.setText(dream.title)
-        }
-
         val buttonList = listOf(
             binding.entry0Button,
             binding.entry1Button,
@@ -117,6 +112,13 @@ class DreamDetailFragment: Fragment() {
 
         binding.deferredCheckbox.isEnabled = !dream.isFulfilled
         binding.fulfilledCheckbox.isEnabled = !dream.isDeferred
+
+        val dataString = DateFormat.format("'Last updated' yyyy-MM-dd 'at' hh:mm:ss A", dream.lastUpdated)
+        binding.lastUpdated.text = getString(R.string.last_updated, dataString)
+
+        if(binding.dreamTitle.text.toString() != dream.title){
+            binding.dreamTitle.setText(dream.title)
+        }
     }
 
     private fun Button.configureForEntry(entry: DreamEntry){

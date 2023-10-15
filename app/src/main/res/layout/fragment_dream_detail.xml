@@ -20,7 +20,7 @@
             android:textSize="24sp" />
 
         <EditText
-            android:id="@+id/title_text"
+            android:id="@+id/dream_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -31,7 +31,7 @@
             android:importantForAutofill="no" />
 
         <TextView
-            android:id="@+id/last_updated_text"
+            android:id="@+id/last_updated"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/last_updated_text"
