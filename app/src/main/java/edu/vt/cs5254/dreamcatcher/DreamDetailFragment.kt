@@ -133,6 +133,13 @@ class DreamDetailFragment: Fragment() {
         } else {
             binding.addReflectionButton.show()
         }
+
+        // Show or hide the FAB based on the dream's fulfillment status
+        if (dream.isFulfilled) {
+            binding.addReflectionButton.hide()
+        } else {
+            binding.addReflectionButton.show()
+        }
     }
 
     private fun Button.configureForEntry(entry: DreamEntry){
