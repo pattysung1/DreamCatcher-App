@@ -23,7 +23,7 @@
             android:name="dreamId"
             app:argType="java.util.UUID" />
         <action
-            android:id="@+id/add_reflection2"
+            android:id="@+id/add_reflection"
             app:destination="@id/reflectionDialogFragment" />
     </fragment>
     <dialog

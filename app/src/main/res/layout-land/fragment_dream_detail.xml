@@ -21,7 +21,7 @@
             android:textSize="24sp" />
 
         <EditText
-            android:id="@+id/dream_title"
+            android:id="@+id/title_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -32,7 +32,7 @@
             tools:ignore="LabelFor" />
 
         <TextView
-            android:id="@+id/last_updated"
+            android:id="@+id/last_updated_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="TextView" />

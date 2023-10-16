@@ -55,7 +55,7 @@ class DreamDetailFragment: Fragment() {
             }
         }
 
-        binding.dreamTitle.doOnTextChanged{text, _, _, _ ->
+        binding.titleText.doOnTextChanged{text, _, _, _ ->
             vm.updateDream { oldDream ->
                 oldDream.copy(title = text.toString())
                     .apply { entries = oldDream.entries }
@@ -114,11 +114,18 @@ class DreamDetailFragment: Fragment() {
         binding.fulfilledCheckbox.isEnabled = !dream.isDeferred
 
         val dataString = DateFormat.format("yyyy-MM-dd 'at' hh:mm:ss A", dream.lastUpdated)
-        binding.lastUpdated.text = getString(R.string.last_updated, dataString)
+        binding.lastUpdatedText.text = getString(R.string.last_updated, dataString)
 
-        if(binding.dreamTitle.text.toString() != dream.title){
-            binding.dreamTitle.setText(dream.title)
+        if(binding.titleText.text.toString() != dream.title){
+            binding.titleText.setText(dream.title)
         }
+
+        binding.addReflectionButton.setOnClickListener {
+            // 打开 ReflectionDialogFragment 或者执行其他操作
+            val reflectionDialogFragment = ReflectionDialogFragment()
+            reflectionDialogFragment.show(parentFragmentManager, ReflectionDialogFragment::class.java.simpleName)
+        }
+
 
         // Show or hide the FAB based on the dream's fulfillment status
         if (dream.isFulfilled) {
