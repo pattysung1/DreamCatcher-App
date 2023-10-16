@@ -113,7 +113,7 @@ class DreamDetailFragment: Fragment() {
         binding.deferredCheckbox.isEnabled = !dream.isFulfilled
         binding.fulfilledCheckbox.isEnabled = !dream.isDeferred
 
-        val dataString = DateFormat.format("'Last updated' yyyy-MM-dd 'at' hh:mm:ss A", dream.lastUpdated)
+        val dataString = DateFormat.format("yyyy-MM-dd 'at' hh:mm:ss A", dream.lastUpdated)
         binding.lastUpdated.text = getString(R.string.last_updated, dataString)
 
         if(binding.dreamTitle.text.toString() != dream.title){

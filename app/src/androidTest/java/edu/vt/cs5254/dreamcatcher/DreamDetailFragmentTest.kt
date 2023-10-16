@@ -129,7 +129,7 @@ class DreamDetailFragmentTest {
             .perform(replaceText("Different Dream"))
 
         scenario.withFragment {
-            val ddfVM: DreamDetailViewModel by viewModels()
+            val e:///Users/pattysung/AndroidStudioProjects/P2-DreamCatcher/app/src/androidTest/java/edu/vt/cs5254/dreamcatcher/DreamDetailFragmentTest.kt:1ddfVM: DreamDetailViewModel by viewModels()
             assertEquals("Different Dream", ddfVM.dream.title)
         }
     }

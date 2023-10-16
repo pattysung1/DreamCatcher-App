@@ -1,8 +1,11 @@
 package edu.vt.cs5254.dreamcatcher.database
 
 import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Update
 import edu.vt.cs5254.dreamcatcher.Dream
 import edu.vt.cs5254.dreamcatcher.DreamEntry
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +29,21 @@ interface DreamDao {
     @Transaction
     suspend fun getDreamAndEntries(id: UUID): Dream {
         return internalGetDream(id).apply { entries = internalGetEntriesForDream(id) }
+    }
 
+    @Update
+    suspend fun internalUpdateDream(dream: Dream)
+
+    @Insert
+    suspend fun internalInsertDreamEntry(dreamEntry: DreamEntry)
+
+    @Query("DELETE FROM dream_entry WHERE dreamId = (:dreamId)")
+    suspend fun internalDeleteEntriesFromDream(dreamId: UUID)
+
+    @Transaction
+    suspend fun updateDreamAndEntries(dream: Dream){
+        internalDeleteEntriesFromDream(dream.id)
+        dream.entries.forEach { internalInsertDreamEntry(it) }
+        internalUpdateDream(dream)
     }
 }

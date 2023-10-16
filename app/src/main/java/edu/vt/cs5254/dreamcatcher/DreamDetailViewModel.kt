@@ -30,6 +30,11 @@ class DreamDetailViewModel(dreamId: UUID) : ViewModel() {
             _dream.value = DreamRepository.get().getDream(dreamId)
         }
     }
+
+    override fun onCleared() {
+        super.onCleared()
+        dream.value?.let { DreamRepository.get().updateDream(it) }
+    }
 }
 
 class DreamDetailViewModelFactory(private val dreamId: UUID): ViewModelProvider.Factory{
