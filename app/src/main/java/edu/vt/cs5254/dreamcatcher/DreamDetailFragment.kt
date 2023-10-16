@@ -119,6 +119,13 @@ class DreamDetailFragment: Fragment() {
         if(binding.dreamTitle.text.toString() != dream.title){
             binding.dreamTitle.setText(dream.title)
         }
+
+        // Show or hide the FAB based on the dream's fulfillment status
+        if (dream.isFulfilled) {
+            binding.addReflectionButton.hide()
+        } else {
+            binding.addReflectionButton.show()
+        }
     }
 
     private fun Button.configureForEntry(entry: DreamEntry){
