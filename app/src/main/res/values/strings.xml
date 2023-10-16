@@ -6,5 +6,8 @@
     <string name="deferred">Deferred</string>
     <string name="last_updated_text">Last_updated_text</string>
     <string name="reflection_count">Reflections: %1$d</string>
-    <string name="last_updated">Last Updated %1$s</string>
+    <string name="last_updated">Last updated %1$s</string>
+    <string name="reflection_dialog_title">Add Reflection</string>
+    <string name="reflection_dialog_positive">Add</string>
+    <string name="reflection_dialog_negative">Cancel</string>
 </resources>
