@@ -1,5 +1,6 @@
 package edu.vt.cs5254.dreamcatcher
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import androidx.navigation.fragment.navArgs
 import edu.vt.cs5254.dreamcatcher.databinding.FragmentDreamDetailBinding
 import kotlinx.coroutines.flow.collect
 import android.text.format.DateFormat
+import androidx.fragment.app.setFragmentResultListener
 import kotlinx.coroutines.launch
 //import java.text.DateFormat
 
@@ -86,6 +88,19 @@ class DreamDetailFragment: Fragment() {
                     }
             }
         }
+        // 设置一个 FragmentResultListener 来监听 ReflectionDialogFragment 返回的结果
+        setFragmentResultListener(
+            ReflectionDialogFragment.REQUEST_KEY
+        ) { _, bundle ->
+            val reflectText = bundle.getString(ReflectionDialogFragment.BUNDLE_KEY)
+            vm.updateDream { oldDream ->
+                oldDream.copy().apply {
+                    entries =  oldDream.entries + DreamEntry(kind = DreamEntryKind.REFLECTION,
+                        text = reflectText.toString(), dreamId = oldDream.id)
+                }
+            }
+        }
+
     }
     override fun onDestroyView() {
         super.onDestroyView()
@@ -141,6 +156,8 @@ class DreamDetailFragment: Fragment() {
             binding.addReflectionButton.show()
         }
     }
+
+
 
     private fun Button.configureForEntry(entry: DreamEntry){
         visibility = View.VISIBLE
