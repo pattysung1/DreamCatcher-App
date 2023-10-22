@@ -46,4 +46,22 @@ interface DreamDao {
         dream.entries.forEach { internalInsertDreamEntry(it) }
         internalUpdateDream(dream)
     }
+
+    @Insert
+    suspend fun internalInsertDream(dream: Dream)
+
+    @Transaction
+    suspend fun insertDreamAndEntries(dream: Dream){
+        internalInsertDream(dream)
+        dream.entries.forEach { internalInsertDreamEntry(it) }
+    }
+
+    @Delete
+    suspend fun internalDeleteDream(dream: Dream)
+
+    @Transaction
+    suspend fun deleteDreamAndEntries(dream: Dream){
+        internalDeleteEntriesFromDream(dream.id)
+        internalDeleteDream(dream)
+    }
 }

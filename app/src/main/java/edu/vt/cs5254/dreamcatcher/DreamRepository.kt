@@ -46,6 +46,14 @@ class DreamRepository(context: Context, private val coroutineScope: CoroutineSco
         }
     }
 
+    suspend fun insertDream(dream: Dream){
+        database.dreamDao().insertDreamAndEntries(dream)
+    }
+
+    suspend fun deleteDream(dream: Dream){
+        database.dreamDao().deleteDreamAndEntries(dream)
+    }
+
     companion object{
         private var INSTANCE: DreamRepository? =null
 

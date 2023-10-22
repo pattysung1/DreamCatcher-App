@@ -9,7 +9,12 @@ import java.util.UUID
 
 class DreamHolder(private val binding: ListItemDreamBinding):
     RecyclerView.ViewHolder(binding.root){
+
+    lateinit var boundDream: Dream
+        private set
     fun bind(dream : Dream, onDreamClicked: (UUID) -> Unit){ //really just updateView!!!
+
+        boundDream = dream
 
         binding.root.setOnClickListener{
             onDreamClicked(dream.id)
@@ -42,7 +47,6 @@ class DreamHolder(private val binding: ListItemDreamBinding):
 class DreamListAdapter(
     private val dreams: List<Dream>,
     private val onDreamClicked: (UUID) -> Unit
-
 ) : RecyclerView.Adapter<DreamHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DreamHolder {
         val inflater = LayoutInflater.from(parent.context)
