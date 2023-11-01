@@ -12,4 +12,6 @@
     <string name="reflection_dialog_negative">Cancel</string>
     <string name="reflection_text">Enter Reflection Text</string>
     <string name="new_dream">New Dream</string>
+    <string name="share_dream">Share Dream</string>
+    <string name="take_photo">Take Photo</string>
 </resources>
