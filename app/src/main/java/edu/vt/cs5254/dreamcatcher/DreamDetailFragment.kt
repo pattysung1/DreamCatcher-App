@@ -135,7 +135,7 @@ class DreamDetailFragment: Fragment() {
             binding.titleText.setText(dream.title)
         }
 
-        binding.addReflectionButton.setOnClickListener {
+        binding.addReflectionButton?.setOnClickListener {
             // 打开 ReflectionDialogFragment 或者执行其他操作
             val reflectionDialogFragment = ReflectionDialogFragment()
             reflectionDialogFragment.show(parentFragmentManager, ReflectionDialogFragment::class.java.simpleName)
@@ -144,16 +144,16 @@ class DreamDetailFragment: Fragment() {
 
         // Show or hide the FAB based on the dream's fulfillment status
         if (dream.isFulfilled) {
-            binding.addReflectionButton.hide()
+            binding.addReflectionButton?.hide()
         } else {
-            binding.addReflectionButton.show()
+            binding.addReflectionButton?.show()
         }
 
         // Show or hide the FAB based on the dream's fulfillment status
         if (dream.isFulfilled) {
-            binding.addReflectionButton.hide()
+            binding.addReflectionButton?.hide()
         } else {
-            binding.addReflectionButton.show()
+            binding.addReflectionButton?.show()
         }
     }
 
