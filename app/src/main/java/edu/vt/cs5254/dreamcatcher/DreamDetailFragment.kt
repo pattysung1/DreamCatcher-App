@@ -85,6 +85,7 @@ class DreamDetailFragment : Fragment() {
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
                     R.id.share_dream_menu -> {
+                        vm.dream.value?.let { shareDream(it) }
                         true
                     }
 
@@ -277,12 +278,8 @@ class DreamDetailFragment : Fragment() {
             binding.addReflectionButton?.show()
         }
 
-        // Show or hide the FAB based on the dream's fulfillment status
-        if (dream.isFulfilled) {
-            binding.addReflectionButton?.hide()
-        } else {
-            binding.addReflectionButton?.show()
-        }
+        //Add this to update
+        updatePhoto(dream)
     }
 
     private fun updatePhoto(dream: Dream) {
@@ -372,11 +369,12 @@ class DreamDetailFragment : Fragment() {
 
 
     private fun canResolve(intent: Intent): Boolean {
-        @Suppress("deprecated")
-        return requireActivity().packageManager.resolveActivity(
-            intent,
-            PackageManager.MATCH_DEFAULT_ONLY
-        ) != null
+//        @Suppress("deprecated")
+//        return requireActivity().packageManager.resolveActivity(
+//            intent,
+//            PackageManager.MATCH_DEFAULT_ONLY
+//        ) != null
+        return requireActivity().packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY) != null
     }
 
     private fun getItemTouchHelper(): ItemTouchHelper{

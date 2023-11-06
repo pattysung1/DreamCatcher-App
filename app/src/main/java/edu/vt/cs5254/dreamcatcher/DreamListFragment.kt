@@ -54,6 +54,10 @@ class DreamListFragment : Fragment() {
             }
         }, viewLifecycleOwner)
 
+        binding.noDreamAddButton.setOnClickListener {
+            showNewDream()
+        }
+
         return binding.root
     }
 
@@ -66,6 +70,19 @@ class DreamListFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED){
                 vm.dreams.collect {dreams ->
+                    if (dreams.isEmpty()) {
+                        binding.noDreamLayout.visibility = View.VISIBLE
+                        binding.noDreamText.visibility = View.VISIBLE
+                        binding.noDreamAddButton.visibility = View.VISIBLE
+                        binding.dreamRecyclerView.visibility = View.VISIBLE
+                    }else {
+                        binding.noDreamLayout.visibility = View.GONE
+                        binding.noDreamText.visibility = View.GONE
+                        binding.noDreamAddButton.visibility = View.GONE
+                        binding.dreamRecyclerView.visibility = View.VISIBLE
+
+                    }
+
                     binding.dreamRecyclerView.adapter = DreamListAdapter(dreams) {dreamId->
                         Log.w("---DLF---", "Clicked dream ID: $dreamId")
                         findNavController().navigate(DreamListFragmentDirections.showDreamDetail(dreamId))
