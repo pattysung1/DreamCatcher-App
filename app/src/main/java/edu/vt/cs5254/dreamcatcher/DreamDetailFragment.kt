@@ -27,6 +27,9 @@ import androidx.core.content.FileProvider
 import androidx.core.view.MenuProvider
 import androidx.core.view.doOnLayout
 import androidx.fragment.app.setFragmentResultListener
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
 import java.io.File
 
@@ -117,10 +120,17 @@ class DreamDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         Log.w("---DDF---", "Received arg ${args.dreamId}")
+
+        getItemTouchHelper().attachToRecyclerView(binding.dreamEntryRecycler)
+        binding.dreamEntryRecycler.layoutManager = LinearLayoutManager(context)
+
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 vm.dream.collect { dream ->
-                    dream?.let { updateView(it) }
+                    dream?.let {
+                        binding.dreamEntryRecycler.adapter = DreamEntryAdapter(it.entries)
+                        updateView(it)
+                    }
                 }
             }
         }
@@ -188,19 +198,7 @@ class DreamDetailFragment : Fragment() {
     }
 
     private fun updateView(dream: Dream) {
-        val buttonList = listOf(
-            binding.entry0Button,
-            binding.entry1Button,
-            binding.entry2Button,
-            binding.entry3Button,
-            binding.entry4Button
-        )
-        buttonList.forEach { it.visibility = View.GONE }
 
-        buttonList.zip(dream.entries)
-            .forEach { (btn, entry) ->
-                btn.configureForEntry(entry)
-            }
 
         binding.deferredCheckbox.isChecked = dream.isDeferred
         binding.fulfilledCheckbox.isChecked = dream.isFulfilled
@@ -274,29 +272,6 @@ class DreamDetailFragment : Fragment() {
         }
     }
 
-    private fun Button.configureForEntry(entry: DreamEntry) {
-        visibility = View.VISIBLE
-        text = entry.kind.toString()
-        when (entry.kind) {
-            DreamEntryKind.REFLECTION -> {
-                setBackgroundWithContrastingText("#FFC988")
-                isAllCaps = false
-                text = entry.text
-            }
-
-            DreamEntryKind.CONCEIVED -> {
-                setBackgroundWithContrastingText("navy")
-            }
-
-            DreamEntryKind.DEFERRED -> {
-                setBackgroundWithContrastingText("#FA8978")
-            }
-
-            DreamEntryKind.FULFILLED -> {
-                setBackgroundWithContrastingText("#86E3CE")
-            }
-        }
-    }
 
     private fun canResolve(intent: Intent): Boolean {
         @Suppress("deprecated")
@@ -304,5 +279,37 @@ class DreamDetailFragment : Fragment() {
             intent,
             PackageManager.MATCH_DEFAULT_ONLY
         ) != null
+    }
+
+    private fun getItemTouchHelper(): ItemTouchHelper{
+        return ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0,0){
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ) = false
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val deHolder = viewHolder as DreamEntryHolder
+                val entryToDelete = deHolder.boundEntry
+                vm.updateDream { oldDream ->
+                    oldDream.copy()
+                        .apply { entries = oldDream.entries.filterNot { it.id ==entryToDelete.id } }
+                }
+            }
+
+            override fun getSwipeDirs(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder
+            ): Int {
+                val deHolder = viewHolder as DreamEntryHolder
+                val entryToSwipe = deHolder.boundEntry
+                return if (entryToSwipe.kind == DreamEntryKind.REFLECTION){
+                    ItemTouchHelper.LEFT
+                } else{
+                    0
+                }
+            }
+        })
     }
 }
