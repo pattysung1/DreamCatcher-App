@@ -27,6 +27,7 @@ import androidx.core.content.FileProvider
 import androidx.core.view.MenuProvider
 import androidx.core.view.doOnLayout
 import androidx.fragment.app.setFragmentResultListener
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -123,6 +124,50 @@ class DreamDetailFragment : Fragment() {
 
         getItemTouchHelper().attachToRecyclerView(binding.dreamEntryRecycler)
         binding.dreamEntryRecycler.layoutManager = LinearLayoutManager(context)
+
+        // addMenuProvider
+        requireActivity().addMenuProvider(object: MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.fragment_dream_detail, menu)
+                menu.findItem(R.id.take_photo_menu).isVisible = canResolve(
+                    photoLauncher.contract.createIntent(
+                        requireContext(),
+                        Uri.EMPTY
+                    )
+                )
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.share_dream_menu -> {
+                        vm.dream.value?.let { shareDream(it) }
+                        true
+                    }
+                    R.id.take_photo_menu -> {
+                        Log.w("---DDF---", "Take Photo Menu Clicked")
+
+                        vm.dream.value?.let {
+                            val photoFile = File(
+                                requireActivity().filesDir,
+                                it.photoFileName
+                            )
+
+                            val photoUri = FileProvider.getUriForFile(
+                                requireContext(),
+                                "edu.vt.cs5254.dreamcatcher.fileprovider",
+                                photoFile
+                            )
+
+                            photoLauncher.launch(photoUri)
+                        }
+
+                        true
+                    }
+                    else -> false
+                }
+            }
+
+        }, viewLifecycleOwner)
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -261,15 +306,68 @@ class DreamDetailFragment : Fragment() {
                         setImageBitmap(bitmap)
                         tag = dream.photoFileName
                     }
+                    binding.dreamPhoto.setOnClickListener {
+                        findNavController().navigate(
+                            DreamDetailFragmentDirections.showPhotoDetail(dream.photoFileName)
+                        )
+                    }
+                    binding.dreamPhoto.isEnabled = true
                 } else {
                     Log.w("---DDF---", "Photo Does NOT Exist")
                     setImageBitmap(null)
-                    tag = null
+                    binding.dreamPhoto.isEnabled = false
                 }
             } else {
                 Log.w("---DDF---", "CACHE EXISTS!")
             }
         }
+    }
+
+    fun shareDream(dream: Dream) {
+        val reportIntent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_TEXT, getDreamText(dream))
+            putExtra(
+                Intent.EXTRA_SUBJECT,
+                "Subject"
+            )
+        }
+
+        val chooserIntent = Intent.createChooser(
+            reportIntent,
+            "Subject"
+        )
+        startActivity(chooserIntent)
+    }
+
+    private fun getDreamText(dream: Dream): String {
+        val title = dream.title + "\n"
+        val date = String.format(
+            DateFormat.format(getString(R.string.last_updated_share_format), dream.lastUpdated).toString()
+        ) + "\n"
+        val reflection = if (dream.entries.any { entry -> entry.kind == DreamEntryKind.REFLECTION }) {
+            val sb = StringBuilder()
+            sb.append("Reflections:").append("\n")
+            dream.entries.filter { entry -> entry.kind == DreamEntryKind.REFLECTION}.forEach {
+                sb.append(String.format(" * %s", it.text)).append("\n")
+            }
+            sb.toString()
+        }else {
+            ""
+        }
+
+        val lastLine = if (dream.entries.any { entry -> entry.kind == DreamEntryKind.DEFERRED || entry.kind == DreamEntryKind.FULFILLED }) {
+            val kind = dream.entries.filter { entry -> entry.kind == DreamEntryKind.DEFERRED || entry.kind == DreamEntryKind.FULFILLED }
+                .first().kind
+            String.format("This dream has been %s.",
+                if (kind == DreamEntryKind.DEFERRED) "Deferred"
+                else "Fulfilled"
+            )
+        }else {
+            ""
+        }
+
+        return title + date + reflection + lastLine
     }
 
 

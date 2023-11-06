@@ -14,4 +14,8 @@
     <string name="new_dream">New Dream</string>
     <string name="share_dream">Share Dream</string>
     <string name="take_photo">Take Photo</string>
+
+    <string name="last_updated_format">\'Last updated\' yyyy-MM-dd \'at\' hh:mm:ss A</string>
+    <string name="last_updated_share_format">\'Last updated\' yyyy-MM-dd</string>
+    <string name="no_dreams">No Dreams</string>
 </resources>
